@@ -15,6 +15,6 @@ class ssan_mv_choferes_model extends CI_Model {
    public function getSQLPrueba(){
        $query = $this->db->query("SELECT * FROM $this->own.GG_TGPACTE");
        return $query->result_array();
-   }
+   }mmmm
 
 }
