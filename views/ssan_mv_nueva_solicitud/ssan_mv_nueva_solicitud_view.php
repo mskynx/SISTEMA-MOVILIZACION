@@ -24,6 +24,10 @@
         <input type="text" name="nombre" id="nombre" class="form-control" required>
     </div>
     <div class="form-group">
+        <label for="correo">Correo: </label>
+        <input type="text" name="correo" id="correo" class="form-control" required>
+    </div>
+    <div class="form-group">
         <label for="n_personas">Cantidad de personas que viajan: </label>
         <input type="text" name="n_personas" id="n_personas" class="form-control" required>
     </div>

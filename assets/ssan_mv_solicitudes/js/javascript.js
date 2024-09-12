@@ -1,118 +1,7 @@
 //Contenido JS de la Extensión ssan_mv_solicitudes.
 
 $(function () {
-   $calendar = $('#fullCalendar');
 
-   today = new Date();
-   y = today.getFullYear();
-   m = today.getMonth();
-   d = today.getDate();
-
-   $calendar.fullCalendar({
-      header: {
-         left: 'title',
-         center: 'month,agendaWeek,agendaDay',
-         right: 'prev,next today'
-      },
-      defaultDate: today,
-      selectable: true,
-      selectHelper: true,
-      titleFormat: {
-         month: 'MMMM YYYY', // September 2015
-         week: "MMMM D YYYY", // September 2015
-         day: 'D MMM, YYYY'  // Tuesday, Sep 8, 2015
-      },
-      select: function (start, end) {
-
-         // on select we show the Sweet Alert modal with an input
-         swal({
-            title: 'Create an Event',
-            html: '<br><input class="form-control" placeholder="Event Title" id="input-field">',
-            showCancelButton: true,
-            closeOnConfirm: true
-         }, function () {
-
-            var eventData;
-            event_title = $('#input-field').val();
-
-            if (event_title) {
-               eventData = {
-                  title: event_title,
-                  start: start,
-                  end: end
-               };
-               $calendar.fullCalendar('renderEvent', eventData, true); // stick? = true
-            }
-
-            $calendar.fullCalendar('unselect');
-
-         });
-      },
-      editable: true,
-      eventLimit: true, // allow "more" link when too many events
-
-
-      // color classes: [ event-blue | event-azure | event-green | event-orange | event-red ]
-      events: [
-         {
-            title: 'All Day Event',
-            start: new Date(y, m, 1)
-         },
-         {
-            id: 999,
-            title: 'Repeating Event',
-            start: new Date(y, m, d - 4, 6, 0),
-            allDay: false,
-            className: 'event-blue'
-         },
-         {
-            id: 999,
-            title: 'Repeating Event',
-            start: new Date(y, m, d + 3, 6, 0),
-            allDay: false,
-            className: 'event-blue'
-         },
-         {
-            title: 'Meeting',
-            start: new Date(y, m, d - 1, 10, 30),
-            allDay: false,
-            className: 'event-green'
-         },
-         {
-            title: 'Lunch',
-            start: new Date(y, m, d + 7, 12, 0),
-            end: new Date(y, m, d + 7, 14, 0),
-            allDay: false,
-            className: 'event-red'
-         },
-         {
-            title: 'LBD Launch',
-            start: new Date(y, m, d - 2, 12, 0),
-            allDay: true,
-            className: 'event-azure'
-         },
-         {
-            title: 'Birthday Party',
-            start: new Date(y, m, d + 1, 19, 0),
-            end: new Date(y, m, d + 1, 22, 30),
-            allDay: false,
-         },
-         {
-            title: 'Click for Creative Tim',
-            start: new Date(y, m, 21),
-            end: new Date(y, m, 22),
-            url: 'http://www.creative-tim.com/',
-            className: 'event-orange'
-         },
-         {
-            title: 'Click for Google',
-            start: new Date(y, m, 23),
-            end: new Date(y, m, 23),
-            url: 'http://www.creative-tim.com/',
-            className: 'event-orange'
-         }
-      ]
-   });
 });
 
 function cargaAjaxPrueba() {
@@ -121,4 +10,60 @@ function cargaAjaxPrueba() {
    var variables = { "id": "001", "nombre": "Casa Azul" }; //Variables pasadas por ajax a la funcion
 
    AjaxExt(variables, id, funcion); //Funcion que Ejecuta la llamada del ajax
+}
+
+function confirm_movil(solicitanteid, fecha, nombre, destino) {
+   // Asignar el ID del chofer al campo oculto del modal
+   document.getElementById('solicitanteid').value = solicitanteid;
+   document.getElementById('fecha').value = fecha;
+   document.getElementById('destino').value = destino;
+   document.getElementById('nombre').value = nombre;
+
+   $('#asignarVehiculoModal').modal('show');
+}
+
+function asignarVehiculo() {
+   var solicitanteid = $('#solicitanteid').val();
+   var fecha = $('#fecha').val();
+   var destino = $("#destino").val();
+   var nombre = $("#nombre").val();
+   var patente = $("#patenteVehiculo").val();
+
+   var id = "respuesta"; //Div o ID de los resultados
+   var funcion = "set_vehiculo"; //Funcion del Controlador a Ejecutar
+   var variables = { patente: patente, solicitanteid: solicitanteid, fecha: fecha, destino: destino, nombre: nombre }; //Variables pasadas por ajax a la funcion
+
+   AjaxExt(variables, id, funcion); //Funcion que Ejecuta la llamada del ajax
+}
+
+function rejectmovil(id_solicitud) {
+   swal({
+      title: 'Motivo de rechazo',
+      html: '<p><input id="input-field" class="form-control" required>' +
+         '<p id="error-message" style="color: red; display: none;">El motivo es obligatorio.</p>',
+      showCancelButton: true,
+      closeOnConfirm: false,
+      allowOutsideClick: false
+   }, function (isConfirm) {
+      if (isConfirm) {
+         var motivo = $('#input-field').val().trim();
+         var errorMessage = $('#error-message');
+
+         if (motivo === '') {
+            errorMessage.show();
+            return false;
+         } else {
+            errorMessage.hide();
+            var variables = { "id_solicitud": id_solicitud, "motivo": motivo };
+            AjaxExt(variables, 'respuesta', 'rejectSolicitud');
+            swal.close();
+         }
+      }
+   });
+}
+function loadTable() {
+   var fecha = $('#fecha').val();
+   var variables = { fecha: fecha };
+
+   AjaxExt(variables, 'resultado', 'get_solicitudes');
 }

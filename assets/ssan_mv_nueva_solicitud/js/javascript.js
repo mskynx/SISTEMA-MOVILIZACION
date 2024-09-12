@@ -10,6 +10,7 @@ $(function () {
       var nombre = $("#nombre").val();
       var n_personas = $("#n_personas").val();
       var nombres = $("#nombres").val();
+      var correo = $("#correo").val();
 
       var fields = [
          { value: fecha, message: "La fecha es obligatoria.", selector: "#fecha" },
@@ -19,7 +20,7 @@ $(function () {
          { value: motivo, message: "El motivo es obligatorio.", selector: "#motivo" },
          { value: nombre, message: "El nombre es obligatorio.", selector: "#nombre" },
          { value: n_personas, message: "El número de personas es obligatorio.", selector: "#n_personas" },
-         { value: nombres, message: "Los nombres son obligatorios.", selector: "#nombres" }
+         { value: correo, message: "El correo es obligatorio.", selector: "#correo" }
       ];
 
       var hasError = false;
@@ -37,13 +38,13 @@ $(function () {
       var variables = {
          fecha: fecha, hora: hora, comienzo: comienzo, destino: destino,
          motivo: motivo, nombre: nombre,
-         n_personas: n_personas, nombres: nombres
+         n_personas: n_personas, nombres: nombres, correo: correo
       };
 
       if (!hasError) {
          AjaxExt(variables, id, funcion);
       }
 
-      });
+   });
 
 });

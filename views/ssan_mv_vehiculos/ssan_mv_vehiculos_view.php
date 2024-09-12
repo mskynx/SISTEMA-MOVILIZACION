@@ -17,8 +17,12 @@
                             <input type="text" class="form-control" id="modelo" required>
                         </div>
                         <div class="form-group">
-                            <label for="ano" class="control-label">Año</label>
-                            <input type="number" class="form-control" id="ano" required>
+                            <label for="anio" class="control-label">Año</label>
+                            <input type="number" class="form-control" id="anio" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cant_asientos" class="control-label">Cantidad Asientos</label>
+                            <input type="number" class="form-control" id="cant_asientos" required>
                         </div>
                         <div class="form-group">
                             <label for="patente" class="control-label">Patente</label>
@@ -26,7 +30,7 @@
                         </div>
                     </div>
                     <div class="footer text-center">
-                        <button type="button" class="btn btn-info btn-fill btn-wd">Guardar Vehículo</button>
+                        <button type="button" id="save_vehiculo" class="btn btn-info btn-fill btn-wd">Guardar Vehículo</button>
                     </div>
                 </form>
             </div>
@@ -48,26 +52,44 @@
                                 <th>Modelo</th>
                                 <th>Año</th>
                                 <th>Patente</th>
+                                <th>Cantidad Asientos</th>
                                 <th class="text-right">Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="vehicleList">
-                            <!-- Ejemplo de fila, deberías generar estas filas dinámicamente con JavaScript -->
-                            <tr>
-                                <td class="text-center">1</td>
-                                <td>Toyota</td>
-                                <td>Corolla</td>
-                                <td>2022</td>
-                                <td>ABC123</td>
-                                <td class="td-actions text-right">
-                                    <button type="button" rel="tooltip" title="Operativo" class="btn btn-success btn-simple btn-xs">
-                                        <i class="fa fa-check"></i>
-                                    </button>
-                                    <button type="button" rel="tooltip" title="En taller" class="btn btn-warning btn-simple btn-xs">
-                                        <i class="fa fa-wrench"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                            <?php
+                            if ($vehiculos) {
+                                foreach ($vehiculos as $val) {
+                            ?>
+                                    <tr>
+                                        <td class="text-center"><?php echo $val['IDCORREL'] ?></td>
+                                        <td><?php echo $val['MARCA'] ?></td>
+                                        <td><?php echo $val['MODELO'] ?></td>
+                                        <td><?php echo $val['ANIO'] ?></td>
+                                        <td><?php echo $val['PATENTE'] ?></td>
+                                        <td><?php echo $val['CANT_ASIENTOS'] ?></td>
+                                        <td class="td-actions text-right">
+                                            <?php
+                                            if ($val['IND_ESTADO'] == 1) {
+                                            ?>
+                                                <button type="button" onclick="out_vehiculo(<?php echo $val['IDCORREL']; ?>);" title="Operativo" class="btn btn-success btn-simple btn-xs">
+                                                    <i class="fa fa-check"></i>
+                                                </button>
+                                            <?php
+                                            } else {
+                                            ?>
+                                                <button type="button" onclick="in_vehiculo(<?php echo $val['IDCORREL']; ?>);" title="En taller" class="btn btn-warning btn-simple btn-xs">
+                                                    <i class="fa fa-wrench"></i>
+                                                </button>
+                                            <?php
+                                            }
+                                            ?>
+                                        </td>
+                                    </tr>
+                            <?php
+                                }
+                            }
+                            ?>
                         </tbody>
                     </table>
                 </div>
